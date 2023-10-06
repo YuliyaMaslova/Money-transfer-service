@@ -1,7 +1,6 @@
-package com.example.money_transfer_service.model;
+package com.example.moneytransfer.model;
 
-public class Amount {
-
-    private int value;
-    private String currency;
+public record Amount(
+        int value,
+        String currency) {
 }

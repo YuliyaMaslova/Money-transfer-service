@@ -1,4 +1,4 @@
-package com.example.money_transfer_service;
+package com.example.moneytransfer;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

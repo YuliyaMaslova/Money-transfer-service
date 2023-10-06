@@ -6,33 +6,28 @@ import com.example.moneytransfer.model.TransferRequest;
 import com.example.moneytransfer.model.TransferResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.web.client.match.JsonPathRequestMatchers;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import ru.netology.quantummoney.model.Amount;
-import ru.netology.quantummoney.model.ConfirmOperation;
-import ru.netology.quantummoney.model.MoneyTransfer;
 
 import java.util.UUID;
 
 @Testcontainers
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class QuantumMoneyApplicationTestsContainers {
+public class MoneyTransferApplicationTestsContainers {
     private final static int PORT = 5500;
 
     @Autowired
     TestRestTemplate restTemplate;
 
     @Container
-    public static GenericContainer<?> myapp = new GenericContainer<>("myapp:latest")
+    public static GenericContainer<?> myapp = new GenericContainer<>("moneytransfer:latest")
             .withExposedPorts(PORT);
 
     @Test
@@ -49,7 +44,7 @@ public class QuantumMoneyApplicationTestsContainers {
                 "http://localhost:" + myapp.getMappedPort(PORT) + "/transfer", request, String.class);
 
         TransferResponse transferResponse = new ObjectMapper().readValue(forEntity.getBody(), TransferResponse.class);
-        Assertions.assertNull(transferResponse.operationId());
+        Assertions.assertNotNull(transferResponse.operationId());
     }
 
    @Test
@@ -59,7 +54,7 @@ public class QuantumMoneyApplicationTestsContainers {
 
        ResponseEntity<String> forEntity = restTemplate.postForEntity(
                "http://localhost:" + myapp.getMappedPort(PORT) + "/confirmOperation", request, String.class);
-       String expected = String.format("{\"operationId\":" + "\"%s\"}", operationId);
+       String expected = String.format("{\"message\":\"Operation with id %s not found\",\"id\":0}", operationId);
        String actual = forEntity.getBody();
        Assertions.assertEquals(expected, actual);
     }

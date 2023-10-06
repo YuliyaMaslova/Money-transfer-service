@@ -1,4 +1,4 @@
-package com.example.money_transfer_service;
+package com.example.moneytransfer;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
